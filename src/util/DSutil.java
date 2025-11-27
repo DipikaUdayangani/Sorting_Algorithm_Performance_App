@@ -1,9 +1,6 @@
 package util;
 
-/**
- * Utility class for common data structure operations (Member 1 initial commit).
- * Contains the swap method provided.
- */
+
 public class DSutil {
 
     /**
