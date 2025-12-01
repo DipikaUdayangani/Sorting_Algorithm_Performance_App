@@ -155,6 +155,45 @@ public class Main {
             if (rows.size() < 2) {
                 throw new Exception("CSV must have header and at least one data row");
             }
+
+            // Find column index
+            String[] header = rows.get(0);
+            int columnIndex = -1;
+            for (int i = 0; i < header.length; i++) {
+                if (header[i].trim().equalsIgnoreCase(columnName)) {
+                    columnIndex = i;
+                    break;
+                }
+            }
+
+            if (columnIndex == -1) {
+                throw new Exception("Column '" + columnName + "' not found. Available columns: " + Arrays.toString(header));
+            }
+
+            // Extract and validate numeric data
+            List<Double> numericData = new ArrayList<>();
+            for (int i = 1; i < rows.size(); i++) {
+                if (columnIndex < rows.get(i).length) {
+                    String value = rows.get(i)[columnIndex].trim();
+                    try {
+                        numericData.add(Double.parseDouble(value));
+                    } catch (NumberFormatException e) {
+                        throw new Exception("Non-numeric value found: '" + value + "' in column '" + columnName + "'");
+                    }
+                }
+            }
+
+            if (numericData.isEmpty()) {
+                throw new Exception("No numeric data found in column: " + columnName);
+            }
+
+            // Convert to String array for sorting
+            String[] originalCol = new String[numericData.size()];
+            for (int i = 0; i < numericData.size(); i++) {
+                originalCol[i] = String.valueOf(numericData.get(i));
+            }
+
+            System.out.println("🔢 Sorting " + originalCol.length + " numeric values");
         }
     }
 
