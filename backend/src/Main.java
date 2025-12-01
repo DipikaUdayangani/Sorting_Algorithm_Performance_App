@@ -128,6 +128,35 @@ public class Main {
                 "<h1>404 - File Not Found</h1>";
         out.write(response.getBytes());
     }
+    //cvs file handling
+    private static void handleSortRequest(String body, OutputStream out) throws Exception {
+        try {
+            // FORMAT: CSV_DATA ### COLUMN_NAME
+            String[] parts = body.split("###");
+            if (parts.length < 2) {
+                throw new Exception("Invalid request format. Expected: CSV###COLUMN");
+            }
+
+            String csvData = parts[0].trim();
+            String columnName = parts[1].trim();
+
+            System.out.println("📊 Processing CSV data for column: " + columnName);
+            System.out.println("CSV sample: " + csvData.substring(0, Math.min(100, csvData.length())));
+
+            List<String[]> rows = new ArrayList<>();
+            String[] lines = csvData.split("\r\n|\n");
+
+            for (String line : lines) {
+                if (!line.trim().isEmpty()) {
+                    rows.add(line.split(","));
+                }
+            }
+
+            if (rows.size() < 2) {
+                throw new Exception("CSV must have header and at least one data row");
+            }
+        }
+    }
 
 }
 
