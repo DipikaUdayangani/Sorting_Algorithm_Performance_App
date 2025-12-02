@@ -224,6 +224,34 @@ public class Main {
         while (j <= right) arr[k++] = temp[j++];
     }
 
+    // Sorting algorithms implementations - Quick sort
+    static void quickSort(String[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+    // Partition method used by Quick Sort
+    static int partition(String[] arr, int low, int high) {
+        double pivot = Double.parseDouble(arr[high]);
+        int i = low - 1;
+        // Iterate through the segment from 'low' to 'high - 1'
+        for (int j = low; j < high; j++) {
+            if (Double.parseDouble(arr[j]) <= pivot) {
+                i++;
+                String temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        String temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+
+
 }
 
 
