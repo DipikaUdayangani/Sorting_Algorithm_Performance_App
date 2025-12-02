@@ -197,6 +197,33 @@ public class Main {
         }
     }
 
+    // Sorting algorithms implementations - merge sort
+    static void mergeSort(String[] arr) {
+        String[] temp = new String[arr.length];
+        mergeSortHelper(arr, temp, 0, arr.length - 1);
+    }
+
+    static void mergeSortHelper(String[] arr, String[] temp, int left, int right) {
+        if (left >= right) return;  // Base case: if the segment has 1 or 0 elements, it's already sorted
+        int mid = (left + right) / 2;
+        mergeSortHelper(arr, temp, left, mid);
+        mergeSortHelper(arr, temp, mid + 1, right);
+
+        System.arraycopy(arr, left, temp, left, right - left + 1);
+
+        int i = left, j = mid + 1, k = left;
+        // Merge the two sorted halves back into arr[]
+        while (i <= mid && j <= right) {
+            if (Double.parseDouble(temp[i]) <= Double.parseDouble(temp[j])) {
+                arr[k++] = temp[i++];
+            } else {
+                arr[k++] = temp[j++];
+            }
+        }
+        while (i <= mid) arr[k++] = temp[i++];
+        while (j <= right) arr[k++] = temp[j++];
+    }
+
 }
 
 
