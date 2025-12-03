@@ -197,6 +197,22 @@ public class Main {
         }
     }
 
+    // Sorting Insert algorithms implementations
+    static void insertionSort(String[] arr) {
+        // Start from the second element (i = 1), since the first element is already "sorted"
+        for (int i = 1; i < arr.length; i++) {
+            String key = arr[i];
+            int j = i - 1;
+
+            // Move elements that are greater than 'key' one position ahead
+            // Convert Strings to double for numeric comparison
+            while (j >= 0 && Double.parseDouble(arr[j]) > Double.parseDouble(key)) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
     // Sorting algorithms implementations - merge sort
     static void mergeSort(String[] arr) {
         String[] temp = new String[arr.length];
