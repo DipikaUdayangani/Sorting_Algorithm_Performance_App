@@ -213,6 +213,23 @@ public class Main {
             arr[j + 1] = key;
         }
     }
+    // Shell Sort algorithms implementations
+    static void shellSort(String[] arr) {
+        int n = arr.length;
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                String temp = arr[i];
+                int j = i;
+                while (j >= gap && Double.parseDouble(arr[j - gap]) > Double.parseDouble(temp)) {
+                    arr[j] = arr[j - gap];
+                    j -= gap;
+                }
+                arr[j] = temp;
+            }
+        }
+    }
+
+
     // Sorting algorithms implementations - merge sort
     static void mergeSort(String[] arr) {
         String[] temp = new String[arr.length];
