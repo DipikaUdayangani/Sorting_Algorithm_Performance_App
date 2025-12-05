@@ -194,6 +194,46 @@ public class Main {
             }
 
             System.out.println("🔢 Sorting " + originalCol.length + " numeric values");
+
+
+
+            // Find best algorithm - dahami
+            String bestAlgorithm = Collections.min(executionTimes.entrySet(),
+                    Map.Entry.comparingByValue()).getKey();
+            long bestTime = executionTimes.get(bestAlgorithm);
+
+            // Build JSON response
+            StringBuilder json = new StringBuilder("{");
+            json.append("\"executionTimes\": {");
+            boolean first = true;
+            for (Map.Entry<String, Long> entry : executionTimes.entrySet()) {
+                if (!first) json.append(",");
+                json.append("\"").append(entry.getKey()).append("\": ").append(entry.getValue());
+                first = false;
+            }
+            json.append("}, ");
+            json.append("\"bestAlgorithm\": \"").append(bestAlgorithm).append("\", ");
+            json.append("\"bestTime\": ").append(bestTime);
+            json.append("}");
+
+            String response = "HTTP/1.1 200 OK\r\n" +
+                    "Content-Type: application/json\r\n" +
+                    "Access-Control-Allow-Origin: *\r\n" +
+                    "Content-Length: " + json.length() + "\r\n\r\n" +
+                    json;
+
+            out.write(response.getBytes());
+            System.out.println("✅ Response sent successfully");
+
+        } catch (Exception e) {
+                System.err.println("❌ Error: " + e.getMessage());
+                String errorJson = "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
+                String errorResponse = "HTTP/1.1 500 Internal Server Error\r\n" +
+                        "Content-Type: application/json\r\n" +
+                        "Access-Control-Allow-Origin: *\r\n" +
+                        "Content-Length: " + errorJson.length() + "\r\n\r\n" +
+                        errorJson;
+                out.write(errorResponse.getBytes());
         }
     }
 
