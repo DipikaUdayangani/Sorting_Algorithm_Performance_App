@@ -195,9 +195,29 @@ public class Main {
 
             System.out.println("🔢 Sorting " + originalCol.length + " numeric values");
 
+            // Test all algorithms
+            Map<String, Long> executionTimes = new LinkedHashMap<>();
+            String[] algorithms = {"Insertion Sort", "Shell Sort", "Merge Sort", "Quick Sort", "Heap Sort"};
 
+            for (String algoName : algorithms) {
+                String[] arr = Arrays.copyOf(originalCol, originalCol.length);
 
-            // Find best algorithm - dahami
+                long startTime = System.nanoTime();
+                switch (algoName) {
+                    case "Insertion Sort" -> insertionSort(arr);
+                    case "Shell Sort" -> shellSort(arr);
+                    case "Merge Sort" -> mergeSort(arr);
+                    case "Quick Sort" -> quickSort(arr, 0, arr.length - 1);
+                    case "Heap Sort" -> heapSort(arr);
+                }
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime) / 1000000; // Convert to milliseconds
+
+                executionTimes.put(algoName, duration);
+                System.out.println("⏱️  " + algoName + ": " + duration + " ms");
+            }
+
+            // Find best algorithm
             String bestAlgorithm = Collections.min(executionTimes.entrySet(),
                     Map.Entry.comparingByValue()).getKey();
             long bestTime = executionTimes.get(bestAlgorithm);
