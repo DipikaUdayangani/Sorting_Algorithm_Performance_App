@@ -4,13 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorting Algorithm Performance Analyzer</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-sort-amount-down"></i> Sorting Algorithm Performance Analyzer</h1>
+<div class="container">
+    <header class="header">
+        <h1><i class="fas fa-sort-amount-down"></i> SortSwift Performance Analyzer</h1>
         <p class="subtitle">Compare the performance of different sorting algorithms on your CSV data</p>
     </header>
 
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-upload"></i> Upload Your Dataset</h2>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="csvFile" class="file-label">
+                    <i class="fas fa-file-csv"></i>
+                    Choose CSV File
+                </label>
+                <input type="file" id="csvFile" accept=".csv" class="file-input">
+                <div id="fileName" class="file-name">No file chosen</div>
+                <small class="help-text">
+                    <i class="fas fa-info-circle"></i>
+                    Make sure your CSV has a header row and numeric columns.
+                    <a href="https://www.kaggle.com/datasets" target="_blank" class="kaggle-link">
+                        Get sample datasets from Kaggle
+                    </a>
+                </small>
+            </div>
+
+            <div class="form-group" id="columnSection" style="display: none;">
+                <label for="columnDropdown">
+                    <i class="fas fa-columns"></i>
+                    Select Numeric Column to Sort:
+                </label>
+                <select id="columnDropdown" class="dropdown">
+                    <option value="">-- Select a column --</option>
+                </select>
+                <div id="dataPreview" class="data-preview"></div>
+            </div>
+
+            <button onclick="runAllAlgorithms()" id="sortButton" class="btn-primary" disabled>
+                <i class="fas fa-play"></i>
+                Run All Sorting Algorithms
+            </button>
+        </div>
+    </div>
+
+    <div id="results" class="results-container"></div>
+
+
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
