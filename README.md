@@ -4,12 +4,11 @@ Sorting Algorithm Performance Evaluator
 
 Project Title
 
-        The SortSwift – Sorting Performance Benchmark Tool
-
+        The SortSwift – Sorting Performance Analyser 
 Overview
 
         This Java application lets users upload a CSV file, pick a numeric column, and compare the execution time of five sorting algorithms.
-        The results are shown through a simple GUI and a bar chart.
+        The results are shown through a simple GUI 
 
 Features
 
