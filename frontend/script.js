@@ -179,3 +179,197 @@ function resetForm() {
     currentCSVData = null;
     currentHeaders = [];
 }
+
+// Run all sorting algorithms
+async function runAllAlgorithms() {
+    const fileInput = document.getElementById("csvFile");
+    const columnSelect = document.getElementById("columnDropdown");
+    const button = document.getElementById("sortButton");
+    const resultsDiv = document.getElementById("results");
+
+    if (!fileInput.files.length || !currentCSVData) {
+        alert("Please select a CSV file first!");
+        return;
+    }
+
+    const selectedColumn = columnSelect.value;
+    if (!selectedColumn) {
+        alert("Please select a numeric column to sort!");
+        return;
+    }
+
+    // Show loading state
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sorting...';
+    resultsDiv.innerHTML = `
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h3>Sorting in Progress</h3>
+            <p>Processing "${selectedColumn}" column...</p>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+    `;
+
+    try {
+        console.log("Sending request for column:", selectedColumn);
+
+        const response = await fetch("http://localhost:8080/sort", {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            body: currentCSVData + "###" + selectedColumn
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = `Server error (${response.status})`;
+            try {
+                const errorData = JSON.parse(errorText);
+                errorMessage = errorData.error || errorMessage;
+            } catch (e) {
+                errorMessage = errorText || errorMessage;
+            }
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        console.log("Received data:", data);
+        displayResults(data);
+
+    } catch (error) {
+        console.error("Error:", error);
+        resultsDiv.innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Error</h3>
+                <p>${error.message}</p>
+                <button onclick="retrySort()" class="btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        `;
+    } finally {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-play"></i> Run All Sorting Algorithms';
+    }
+}
+
+function retrySort() {
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = '';
+    runAllAlgorithms();
+}
+
+function displayResults(data) {
+    const resultsDiv = document.getElementById("results");
+    const executionTimes = data.executionTimes;
+
+    // Create performance chart
+    const algorithms = Object.keys(executionTimes);
+    const times = Object.values(executionTimes);
+    const maxTime = Math.max(...times);
+
+    let chartHTML = `
+        <div class="performance-chart">
+            <h3><i class="fas fa-chart-bar"></i> Performance Comparison</h3>
+            <div class="chart-bars">
+    `;
+
+    algorithms.forEach((algorithm, index) => {
+        const time = times[index];
+        const percentage = Math.max((time / maxTime) * 80, 10); // Minimum 10% width
+        const isBest = algorithm === data.bestAlgorithm;
+
+        chartHTML += `
+            <div class="chart-bar-container">
+                <div class="chart-bar-label">${algorithm}</div>
+                <div class="chart-bar ${isBest ? 'best' : ''}" style="width: ${percentage}%">
+                    <span class="chart-bar-time">${time} ms</span>
+                </div>
+            </div>
+        `;
+    });
+
+    chartHTML += `</div></div>`;
+
+    let tableHTML = `
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-table"></i> Sorting Results</h2>
+            </div>
+            <div class="card-body">
+                ${chartHTML}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Execution Time (ms)</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    // Add rows for each algorithm
+    Object.entries(executionTimes).forEach(([algorithm, time]) => {
+        const isBest = algorithm === data.bestAlgorithm;
+        const rowClass = isBest ? 'best-algorithm' : '';
+
+        tableHTML += `
+            <tr class="${rowClass}">
+                <td><i class="fas fa-sort-amount-down"></i> ${algorithm}</td>
+                <td><strong>${time} ms</strong></td>
+                <td>${isBest ? '<span class="best-badge"><i class="fas fa-trophy"></i> FASTEST</span>' : ''}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `
+            </tbody>
+        </table>
+        <div class="success">
+            <h3><i class="fas fa-trophy"></i> Best Performing Algorithm: ${data.bestAlgorithm}</h3>
+            <p>Execution Time: ${data.bestTime} milliseconds</p>
+            <small>Results may vary based on dataset size and system performance</small>
+        </div>
+    `;
+
+    resultsDiv.innerHTML = tableHTML;
+}
+
+// Add demo CSV download functionality
+function downloadSampleCSV() {
+    const sampleCSV = `Name,Age,Salary,Score
+John Doe,25,50000,85.5
+Jane Smith,30,60000,92.3
+Bob Johnson,35,55000,78.9
+Alice Brown,28,52000,88.1
+Charlie Wilson,40,70000,95.7`;
+
+    const blob = new Blob([sampleCSV], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample-data.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Add sample download link to help text
+    const helpText = document.querySelector('.help-text');
+    helpText.innerHTML += `<br><a href="javascript:void(0)" onclick="downloadSampleCSV()" class="kaggle-link">
+        <i class="fas fa-download"></i> Download sample CSV file
+    </a>`;
+});
