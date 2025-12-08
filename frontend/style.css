@@ -252,12 +252,131 @@ tr:hover {
     font-size: 0.9rem;
 }
 
+/* Performance Chart Styles */
 .performance-chart {
     margin-top: 30px;
     padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.performance-chart h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 0;
+}
+
+.chart-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.chart-bar-label {
+    width: 150px;
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: right;
+}
+
+.chart-bar {
+    height: 40px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 80px;
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+}
+
+.chart-bar.best {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+}
+
+.chart-bar-time {
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+/* Best algorithm styling in table */
+.best-algorithm {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.1)) !important;
+    border-left: 4px solid #27ae60;
+}
+
+.best-badge {
+    background: #27ae60;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Progress bar for loading */
+.progress-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 4px;
+    width: 0%;
+    animation: progressAnimation 2s ease-in-out infinite;
+}
+
+@keyframes progressAnimation {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.loading i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #3498db;
+}
+
+.loading h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.loading p {
+    color: #6c757d;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
